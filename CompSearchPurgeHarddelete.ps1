@@ -1,16 +1,33 @@
+# Written by BenschiBox 24-01-2022
+# https://github.com/BenschiBox/M365-Scripts
+# 
+# adapted from:
+# PurgeMessagesWithContentSearch.PS1
+# https://github.com/12Knocksinna/Office365itpros/blob/master/PurgeMessagesWithContentSearch.PS1
+# 
+# and
+# https://stackoverflow.com/users/67419/neildeadman
+# https://stackoverflow.com/questions/62681477/o365-compliance-search-harddelete-not-working
+
 Clear-Host
 
 # Connect to Exchange Online
 $credentials = get-credential;
-Connect-ExchangeOnline -Credential $credentials
+Connect-ExchangeOnline -Credential $credentials -ShowBanner:$false
 $SccSession = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ -Credential $credentials -Authentication "Basic" -AllowRedirection;
 Import-PSSession $SccSession
+Connect-IPPSSession -Credential $credentials
+
+# optional
+# $mailboxes = @("mailbox1@example.net", "mailbox2@example.net")
+# $monthsToKeep = 3
+# $sourceDate = (Get-Date).AddMonths(-$monthsToKeep)
+# $searchName = "PurgeEmails-Powershell"
+# $contentQuery = "received<=$($sourceDate) AND kind:email"
 
 $mailboxes = @("office@lechner-partner.at")
-
-$searchName = "PurgeEmails"
-
-$contentQuery = "folderid:DAA9C0C1B6593341B21777B8536C40B900000000011A0000 AND kind:email"
+$searchName = "PurgeEmails-Powershell"
+$contentQuery = "folderid:DAA9C0C1B6593341B21777B8536C40B90001E36802200000 AND kind:email"
 
 # Clean-up any old searches from failed runs of this script
 if (Get-ComplianceSearch -Identity $searchName) {
@@ -25,13 +42,16 @@ if (Get-ComplianceSearch -Identity $searchName) {
     }
 }
 
+# optional
+# Write-Host "Creating new search for emails older than $($sourceDate)"
+
 Write-Host "Creating new search $searchName with contentQuery $contentQuery"
 
 New-ComplianceSearch -Name $searchName -ContentMatchQuery $contentQuery -ExchangeLocation $mailboxes -AllowNotFoundExchangeLocationsEnabled $true | Out-Null
                                                                             
 Start-ComplianceSearch -Identity $searchName | Out-Null
 
-Write-Host "Searching..."
+Write-Host "Searching..." -NoNewline
 
 while ((Get-ComplianceSearch -Identity $searchName).Status -ne "Completed") {
     Write-Host "." -NoNewline
@@ -88,12 +108,14 @@ if ($items -gt 0) {
         }    
     } else {
         Write-Host ""
-        Write-Host "Aborted!"
+        Write-Host "Deletion Aborted!"
     }
-    Write-Host ""
-    Write-Host "COMPLETED!"
 } else {
     Write-Host ""
     Write-Host "No items found"
-    Write-Host "COMPLETED!"
 }
+
+Disconnect-ExchangeOnline -Confirm:$false -InformationAction Ignore -ErrorAction SilentlyContinue
+
+Write-Host ""
+Write-Host "COMPLETED!"
