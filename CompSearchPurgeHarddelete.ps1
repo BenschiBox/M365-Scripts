@@ -25,9 +25,9 @@ Connect-IPPSSession -Credential $credentials
 # $searchName = "PurgeEmails-Powershell"
 # $contentQuery = "received<=$($sourceDate) AND kind:email"
 
-$mailboxes = @("office@lechner-partner.at")
+$mailboxes = @("office@idontknow.com")
 $searchName = "PurgeEmails-Powershell"
-$contentQuery = "folderid:DAA9C0C1B6593341B21777B8536C40B90001E36802200000 AND kind:email"
+$contentQuery = "folderid:PASTEIDHERE AND kind:email"
 
 # Clean-up any old searches from failed runs of this script
 if (Get-ComplianceSearch -Identity $searchName) {
