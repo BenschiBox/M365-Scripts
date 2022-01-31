@@ -12,10 +12,10 @@
 Clear-Host
 
 # Connect to Exchange Online
-$credentials = get-credential;
+$credentials = get-credential
 Connect-ExchangeOnline -Credential $credentials -ShowBanner:$false
-$SccSession = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ -Credential $credentials -Authentication "Basic" -AllowRedirection;
-Import-PSSession $SccSession
+# $SccSession = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ -Credential $credentials -Authentication "Basic" -AllowRedirection;
+# Import-PSSession $SccSession
 Connect-IPPSSession -Credential $credentials
 
 # optional
