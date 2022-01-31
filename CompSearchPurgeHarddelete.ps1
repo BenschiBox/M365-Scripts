@@ -87,7 +87,7 @@ if ($items -gt 0) {
     }
     Write-Host ""
 
-    if($ContinueDeletion -eq $true) {
+    if($ContinueDeletion) {
         $iterations = 0;
         $itemsProcessed = 0
         while ($itemsProcessed -lt $items) {
