@@ -3,9 +3,9 @@
 # 
 # This Script utilizes Exchange Online PowerShell V2 commands (Get-EXO...)
 
-$UserCredential = Get-Credential
-Connect-ExchangeOnline -Credential $UserCredential -ShowBanner:$false
-clear
+#$UserCredential = Get-Credential
+#Connect-ExchangeOnline -Credential $UserCredential -ShowBanner:$false
+#clear
 
 $Mailbox = Read-Host -Prompt 'Mailbox Email-address or identifier'
 
@@ -34,4 +34,4 @@ if ($TopLevelOnly) {
     Export-csv .\MailboxFolderSize.csv -NoTypeInformation
 }
 
-Disconnect-ExchangeOnline -Confirm:$false -InformationAction Ignore -ErrorAction SilentlyContinue
+#Disconnect-ExchangeOnline -Confirm:$false -InformationAction Ignore -ErrorAction SilentlyContinue
