@@ -1,5 +1,7 @@
 # Written by BenschiBox 24-01-2022
 # https://github.com/BenschiBox/M365-Scripts
+# 
+# This Script utilizes Exchange Online PowerShell V2 commands (Get-EXO...)
 
 $UserCredential = Get-Credential
 Connect-ExchangeOnline -Credential $UserCredential -ShowBanner:$false
@@ -20,14 +22,14 @@ while(-not ($TopLevelOnly -is [bool])) {
 if($TopLevelOnly) {
     Get-EXOMailboxFolderStatistics -Identity $Mailbox | 
     Where-Object {$_.folderpath.Substring(1).Contains("/") -eq $false} | 
-    select FolderPath, ` @{name=”FolderAndSubfolderSize (MB)”; expression={[math]::Round( ` 
-    ($_.FolderAndSubfolderSize.ToString().Split(“(“)[1].Split(” “)[0].Replace(“,”,””)/1MB),2)}} | 
+    select FolderPath, ` @{name=â€FolderAndSubfolderSize (MB)â€; expression={[math]::Round( ` 
+    ($_.FolderAndSubfolderSize.ToString().Split(â€œ(â€œ)[1].Split(â€ â€œ)[0].Replace(â€œ,â€,â€â€)/1MB),2)}} | 
     sort -Property "FolderAndSubfolderSize (MB)" -Descending |
     Export-csv .\MailboxFolderSize.csv -NoTypeInformation
 } else {
     Get-EXOMailboxFolderStatistics -Identity $Mailbox | 
-    select FolderPath, ` @{name=”FolderAndSubfolderSize (MB)”; expression={[math]::Round( ` 
-    ($_.FolderAndSubfolderSize.ToString().Split(“(“)[1].Split(” “)[0].Replace(“,”,””)/1MB),2)}} | 
+    select FolderPath, ` @{name=â€FolderAndSubfolderSize (MB)â€; expression={[math]::Round( ` 
+    ($_.FolderAndSubfolderSize.ToString().Split(â€œ(â€œ)[1].Split(â€ â€œ)[0].Replace(â€œ,â€,â€â€)/1MB),2)}} | 
     sort -Property "FolderAndSubfolderSize (MB)" -Descending |
     Export-csv .\MailboxFolderSize.csv -NoTypeInformation
 }
