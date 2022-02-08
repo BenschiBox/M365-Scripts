@@ -10,7 +10,7 @@ clear
 $Mailbox = Read-Host -Prompt 'Mailbox Email-address or identifier'
 
 $TopLevelOnly = $null
-while(-not ($TopLevelOnly -is [bool])) {
+while (-not ($TopLevelOnly -is [bool])) {
     $TopLevelOnly = Read-Host -Prompt "Top-Level Paths only? (true/false)"
     try {
         $TopLevelOnly = [System.Convert]::ToBoolean($TopLevelOnly)
@@ -19,7 +19,7 @@ while(-not ($TopLevelOnly -is [bool])) {
     }
 }
 
-if($TopLevelOnly) {
+if ($TopLevelOnly) {
     Get-EXOMailboxFolderStatistics -Identity $Mailbox | 
     Where-Object {$_.folderpath.Substring(1).Contains("/") -eq $false} | 
     select FolderPath, ` @{name=”FolderAndSubfolderSize (MB)”; expression={[math]::Round( ` 
